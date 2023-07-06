@@ -1,0 +1,61 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor User as "ユーザ"
+actor Operator as "運営"
+actor Performer as "パフォーマー"
+actor advertiser as "広告したい企業"
+rectangle "アプリケーション" {
+    ' ユーザ視点のユースケース
+    usecase "イベント前に他の参加者と交流" as UC1
+    usecase "イベント後に自分の視点でのイベントで思い出を投稿" as UC2
+    usecase "他の人の投稿にコメント" as UC3
+    usecase "イベント後に関連イベントの企画" as UC4
+
+    ' 運営視点のユースケース
+    usecase "イベントに関するお知らせ" as UC5
+    usecase "追加でイベントの企画（イベント後に飲み会など...）" as UC6
+
+    ' パフォーマー視点のユースケース
+    usecase "イベント前にイベントにかける思いなどを共有" as UC7
+    usecase "イベント後にイベントの感想を共有" as UC8
+    usecase "更なるファンを増やしたい" as UC9
+
+
+    ' 広告したい企業視点のユースケース
+    usecase "イベント好きな人が買いたくなるプロダクトを広告" as UC10
+    usecase "他のイベントの広告" as UC11
+
+    User --> UC1
+    User --> UC2
+    User --> UC3
+    User --> UC4
+
+    Operator --> UC5
+    Operator --> UC6
+
+    Performer --> UC7
+    Performer --> UC8
+    Performer --> UC9
+
+    advertiser --> UC10
+
+    advertiser --> UC11
+
+
+}
+
+advertiser --> Operator: 掲載料金
+Operator --> advertiser: 広告の機会の提供
+
+User --> Performer: どんなことに期待し、どんなところに興味を持っているかを共有
+Performer --> User: イベントや自分たちの素晴らしさを共有
+
+User --> Operator: イベントの感想や要望を共有
+Operator --> User: イベント関係のお知らせを共有
+
+User --> advertiser: 広告を見て、興味を持ったら広告主のサイトに飛ぶ
+advertiser --> User: 顧客の趣向にあった広告
+
+@enduml
