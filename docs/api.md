@@ -25,16 +25,19 @@
 ## エンドポイント一覧
 - [`/healthcheck`](#healthcheck)
 - [`/token`](#token)
-- [`token/refresh`](#tokenrefresh)
+- [`/token/refresh`](#tokenrefresh)
 - [`/change-passwd`](#change-passwd)
 - [`/me`](#me)
 - [`/users`](#users)
 - [`/share-your-views`](#share-your-views)
+- [`/upload-image`](#upload-image)
 - [`/posts`](#posts)
 - [`/post-it/<post-id>`](#post-itpost-id)
-- [`unpost-it/<post-it-id>`](#unpost-itpost-it-id)
+- [`/unpost-it/<sticky-note-id>`](#unpost-itsticky-note-id)
 - [`/like/<post-id>`](#likepost-id)
 - [`/unlike/<post-id>`](#unlikepost-id)
+- [`/like/<sticky-note-id>`](#likesticky-note-id)
+- [`/unlike/<sticky-note-id>`](#unlikesticky-note-id)
 - [`/follow/<user-id>`](#followuser-id)
 - [`/unfollow/<user-id>`](#unfollowuser-id)
 
@@ -55,7 +58,7 @@
 - 200 OK
 ```json
 {
-  "message": "working"
+  "message": "Server is working"
 }
 ```
 
@@ -107,9 +110,9 @@
 
 ### メソッド
 - GET
-- PUT
+- PATCH
 
-### パラメータ（PUT時の）
+### パラメータ（PATCH時の）
 - name
 - icon
 - comment
@@ -118,15 +121,67 @@
 - 200 OK
 ```json
 {
-  "message": "success",
+  "id": 1,
+  "name": "test太郎",
+  "icon-url": "https://example.com/icon.png",
+  "comment": "describe yourself",
+  "posts": [
+    {
+      "id": 1,
+      "title": "test title",
+      "content": "test content",
+      "images": "https://example.com/image.png",
+      "created_at": "2020-01-01 00:00:00",
+      "updated_at": "2020-01-01 00:00:00"
+    },
+    {
+      "id": 2,
+      "title": "test2 title",
+      "content": "test2 content",
+      "images": "https://example.com/image2.png",
+      "created_at": "2020-01-01 00:00:00",
+      "updated_at": "2020-01-01 00:00:00"
+    }, ...
+    ],
+}
+```
+※ユーザページでは最初の写真のみ表示すると仮定
+
+※tokenからユーザを特定
+
+- 200 OK when PATCH
+```json
+{
+  "message": "success to update",
   "user": {
     "id": 1,
-    "name": "test",
-    "icon": "https://example.com/icon.png",
-    "comment": "test"
+    "name": "new test太郎",
+    "icon-url": "https://example.com/icon.png",
+    "comment": "new description",
+    "posts": [
+      {
+        "id": 1,
+        "title": "test title",
+        "content": "test content",
+        "images": "https://example.com/image.png",
+        "created_at": "2020-01-01 00:00:00",
+        "updated_at": "2020-01-01 00:00:00"
+      },
+      {
+        "id": 2,
+        "title": "test2 title",
+        "content": "test2 content",
+        "images": "https://example.com/image2.png",
+        "created_at": "2020-01-01 00:00:00",
+        "updated_at": "2020-01-01 00:00:00"
+      }, ...
+      ],
   }
 }
 ```
+
+※ユースケース的にGETする前にPATCHすることはないかも。だとしたら、postsはPATCH時には返さない方がいいかも
+
 ### その他ノート
 どんな要素を持たせるかは考え中
 
@@ -156,12 +211,9 @@
 
 ### メソッド
 - GET
-- POST
 
 ### パラメータ
-- GET：ユーザの一覧取得
-    - `<query>`：検索文字列（任意）
-    - user-id：ユーザID（任意）
+- query：検索文字列（任意）
 
 ※優先度としては、user-id > query
 
@@ -172,13 +224,15 @@
 [
   {
     "id": 1,
-    "name": "test",
-    "icon": "https://example.com/icon.png"
+    "name": "test太郎",
+    "icon-url": "https://example.com/icon.png",
+    "comment": "describe yourself",
   },
   {
     "id": 2,
-    "name": "test2",
-    "icon": "https://example.com/icon2.png"
+    "name": "test2太郎",
+    "icon-url": "https://example.com/icon2.png",
+    "comment": "describe yourself",
   }, ...
 ]
 ```
@@ -187,30 +241,22 @@
 [
   {
     "id": 1,
-    "name": "test",
-    "icon": "https://example.com/icon.png"
+    "name": "test太郎",
+    "icon-url": "https://example.com/icon.png",
+    "comment": "describe yourself",
   },
   {
     "id": 2,
-    "name": "test2",
-    "icon": "https://example.com/icon2.png"
+    "name": "test2太郎",
+    "icon-url": "https://example.com/icon2.png",
+    "comment": "describe yourself",
   }, ...
 ]
 ```
-- 200 OK with user-id
-```json
-{
-  "id": 1,
-  "name": "test",
-  "icon": "https://example.com/icon.png",
-  "comment": "test"
-}
-```
-
 ## `/user/<user-id>`
 
 ### 概要
-指定したユーザのプロフィール情報を取得する
+指定したユーザのプロフィール情報の詳細を取得する
 
 ### メソッド
 - GET
@@ -221,32 +267,48 @@
 ### レスポンス
 ```json
 {
-  "name": "test",
-  "icon": "https://example.com/icon.png",
+  "name": "test太郎",
+  "icon-url": "https://example.com/icon.png",
+  "comment": "describe yourself",
   "followers": [
     {
       "id": 1,
-      "name": "test",
-      "icon": "https://example.com/icon.png"
+      "name": "test太郎",
+      "icon-url": "https://example.com/icon.png"
     },
     {
       "id": 2,
-      "name": "test2",
-      "icon": "https://example.com/icon2.png"
+      "name": "test2太郎",
+      "icon-url": "https://example.com/icon2.png"
     }, ...
   ],
   "following": [
     {
       "id": 1,
-      "name": "test",
-      "icon": "https://example.com/icon.png"
+      "name": "test太郎",
+      "icon-url": "https://example.com/icon.png"
     },
     {
       "id": 2,
-      "name": "test2",
-      "icon": "https://example.com/icon2.png"
+      "name": "test2太郎",
+      "icon-url": "https://example.com/icon2.png"
     }, ...
-  ]
+  ],
+  "post": {
+    "id": 1,
+    "title": "test title",
+    "content": "test content",
+    "images": [
+      {
+        "id": 1,
+        "url": "https://example.com/image.png"
+      },
+      {
+        "id": 2,
+        "url": "https://example.com/image2.png"
+      }, ...
+    ]
+  }
 }
 ```
 
@@ -261,96 +323,269 @@
 ### パラメータ
 - title
 - content
-- images
+- seat
+- images-urls
+
+
+※ images-urlsはupload-imageで取得した画像オブジェクトの配列
 
 ### レスポンス
 - 200 OK
 ```json
 {
-  "message": "success to post your views"
+  "message": "success to share your views",
+  "post" :{
+    "title": "test title",
+    "content": "test content",
+    "seat": "A-1",
+    "images" : [
+      {
+        "id": 1,
+        "url": "https://example.com/image.png"
+      },
+      {
+        "id": 2,
+        "url": "https://example.com/image2.png"
+      }, ...
+    ]
+  }
 }
 ```
 
+## `/upload-image`
+
+### 概要
+画像をアップロードする
+
+### メソッド
+- POST
+
+### パラメータ
+- image
+
+### レスポンス
+- 200 OK
+```json
+{
+  "message": "success to upload image",
+  "image": {
+    "id": 1,
+    "url": "https://example.com/image.png"
+  }
+}
+```
 
 ## `/posts`
 
 ### 概要
 GET：投稿の一覧を取得する
-POST with post-id：投稿の詳細を取得する
-POST with query：投稿の検索を行う
-※一覧と検索のときは、Likeやpost-itは件数を返す。詳細では、Likeやpost-itの一覧を返す。
+POST with query：投稿の検索を行う（とりあえずタイトル検索のつもり）
+※一覧と検索のときは、Likeは件数を返す。
 
 ### メソッド
 - GET
 
 ### パラメータ
 - query：検索文字列（任意）
-- post-id：投稿ID（任意）
+
 
 ※優先度としては、post-id > query
 
 ### レスポンス
 - 200 OK without params
 ```json
-{
-    {
-        "title": "test",
-        "content": "test",
-        "user": {
-            "id": 1,
-            "name": "test",
-            "icon": "https://example.com/icon.png"
-        },
-        "images": [
+[
+  {
+      "title": "test title",
+      "content": "test content",
+      "seat": "A-1",
+      "num-likes": 10,
+      "user": {
+          "id": 1,
+          "name": "test太郎",
+          "icon-url": "https://example.com/icon.png"
+      },
+      "images": [
+          {
+              "id": 1,
+              "url": "https://example.com/image.png"
+          },
+          {
+              "id": 2,
+              "url": "https://example.com/image2.png"
+          }, ...
+      ],
+      "sticky-notes": {
+          "id": 1,
+          "content": "test content",
+          "color": "red",
+          "num-likes": 10,
+          "user": {
+              "id": 1,
+              "name": "test太郎",
+              "icon-url": "https://example.com/icon.png"
+          },
+      }
+  },
+  {
+      "title": "test title",
+      "content": "test content",
+      "seat": "A-1",
+      "num-likes": 10,
+      "user": {
+          "id": 1,
+          "name": "test太郎",
+          "icon-url": "https://example.com/icon.png"
+      },
+      "images": [
+          {
+              "id": 1,
+              "url": "https://example.com/image.png"
+          },
+          {
+              "id": 2,
+              "url": "https://example.com/image2.png"
+          }, ...
+      ],
+      "sticky-notes": [
             {
+              "id": 1,
+              "content": "test content",
+              "color": "red",
+              "num-likes": 10,
+              "user": {
                 "id": 1,
-                "url": "https://example.com/image.png"
-            },
-            {
-                "id": 2,
-                "url": "https://example.com/image2.png"
-            }, ...
-        ],
-        "num-post-its": 10,
-        "num-likes": 10,
-    }, ...
-}
+                "name": "test太郎",
+                "icon-url": "https://example.com/icon.png"
+              }
+          },
+          {
+              "id": 2,
+              "content": "test content",
+              "color": "red",
+              "num-likes": 10,
+              "user": {
+                  "id": 1,
+                  "name": "test太郎",
+                  "icon-url": "https://example.com/icon.png"
+              },
+          }, ...
+      ]
+  }, ...
+]
 ```
+
+※sticky-noteはいいねが多い順でソートして数個返すのもあり
+
 - 200 OK with query (value=test)
 ```json
-{
-    {
-        "title": "test",
-        "content": "test",
-        "user": {
-            "id": 1,
-            "name": "test",
-            "icon": "https://example.com/icon.png"
-        },
-        "images": [
+[
+  {
+      "title": "test in title",
+      "content": "test content",
+      "seat": "A-1",
+      "num-likes": 10,
+      "user": {
+          "id": 1,
+          "name": "test太郎",
+          "icon-url": "https://example.com/icon.png"
+      },
+      "images": [
+          {
+              "id": 1,
+              "url": "https://example.com/image.png"
+          },
+          {
+              "id": 2,
+              "url": "https://example.com/image2.png"
+          }, ...
+      ],
+      "sticky-notes": [
             {
+              "id": 1,
+              "content": "test content",
+              "color": "red",
+              "num-likes": 10,
+              "user": {
                 "id": 1,
-                "url": "https://example.com/image.png"
-            },
-            {
-                "id": 2,
-                "url": "https://example.com/image2.png"
-            }, ...
-        ],
-        "num-post-its": 10,
-        "likes": 10,
-    }, ...
-}
+                "name": "test太郎",
+                "icon-url": "https://example.com/icon.png"
+              }
+          },
+          {
+              "id": 2,
+              "content": "test content",
+              "color": "red",
+              "num-likes": 10,
+              "user": {
+                  "id": 1,
+                  "name": "test太郎",
+                  "icon-url": "https://example.com/icon.png"
+              },
+          }, ...
+      ]
+  },
+  {
+      "title": "test in title",
+      "content": "test content",
+      "seat": "A-1",
+      "num-likes": 10,
+      "user": {
+          "id": 1,
+          "name": "test太郎",
+          "icon-url": "https://example.com/icon.png"
+      },
+      "images": [
+          {
+              "id": 1,
+              "url": "https://example.com/image.png"
+          },
+          {
+              "id": 2,
+              "url": "https://example.com/image2.png"
+          }, ...
+      ],
+      "sticky-notes": [
+          "id": 1,
+          "content": "test content",
+          "color": "red",
+          "num-likes": 10,
+          "user": {
+              "id": 1,
+              "name": "test太郎",
+              "icon-url": "https://example.com/icon.png"
+          },
+      ]
+  }, ...
+]
 ```
-- 200 OK with post-id
+
+※sticky-noteはいいねが多い順でソートして数個返すのもあり
+### その他のメモ
+- 一度のリクエスト何件のデータを送るか？（ページネーション）
+
+## `/post/<post-id>`
+
+### 概要
+指定した投稿の詳細を取得する
+
+### メソッド
+- GET
+
+### パラメータ
+- post-id：投稿ID
+
+### レスポンス
 ```json
 {
-    "title": "test",
-    "content": "test",
+    "title": "test title",
+    "content": "test content",
+    "seat": "A-1",
+    "num-likes": 10,
     "user": {
         "id": 1,
-        "name": "test",
-        "icon": "https://example.com/icon.png"
+        "name": "test太郎",
+        "icon-url": "https://example.com/icon.png"
     },
     "images": [
         {
@@ -362,43 +597,21 @@ POST with query：投稿の検索を行う
             "url": "https://example.com/image2.png"
         }, ...
     ],
-    "post-its": [
-        {
+    "sticky-notes": [
+        "id": 1,
+        "content": "test content",
+        "color": "red",
+        "num-likes": 10,
+        "user": {
             "id": 1,
-            "content": "test",
-            "user": {
-                "id": 1,
-                "name": "test",
-                "icon": "https://example.com/icon.png"
-            }
+            "name": "test太郎",
+            "icon-url": "https://example.com/icon.png"
         },
-        {
-            "id": 2,
-            "content": "test2",
-            "user": {
-                "id": 2,
-                "name": "test2",
-                "icon": "https://example.com/icon2.png"
-            }
-        }, ...
-    ],
-    "likes": [
-        {
-            "id": 1,
-            "name": "test",
-            "icon": "https://example.com/icon.png"
-        },
-        {
-            "id": 2,
-            "name": "test2",
-            "icon": "https://example.com/icon2.png"
-        }, ...
-    ],
+    ]
 }
 ```
 
-### その他のメモ
-- 一度のリクエスト何件のデータを送るか？（ページネーション）
+※sticky-noteはいいねが多い順でソートして数個返すのもあり
 
 
 ## `/post-it/<post-id>`
@@ -417,20 +630,21 @@ POST with query：投稿の検索を行う
 ### レスポンス
 ```json
 {
-    "message": "success",
-    "post-it": {
+    "message": "success to create a sticky note",
+    "sticky-note": {
         "id": 1,
-        "content": "test",
+        "content": "test content",
+        "color": "red",
         "user": {
             "id": 1,
-            "name": "test",
-            "icon": "https://example.com/icon.png"
+            "name": "test太郎",
+            "icon-url": "https://example.com/icon.png"
         }
     }
 }
 ```
 
-## `/unpost-it/<post-it-id>`
+## `/unpost-it/<sticky-note-id>`
 
 ### 概要
 指定した付箋を削除する
@@ -439,12 +653,22 @@ POST with query：投稿の検索を行う
 - DELETE
 
 ### パラメータ
-- post-it-id：付箋ID
+- sticky-note-id：付箋ID
 
 ### レスポンス
 ```json
 {
-    "message": "success to delete a post-it"
+    "message": "success to delete a sticky note",
+    "sticky-note": {
+        "id": 1,
+        "content": "test content",
+        "color": "red",
+        "user": {
+            "id": 1,
+            "name": "test太郎",
+            "icon-url": "https://example.com/icon.png"
+        }
+    }
 }
 ```
 
@@ -464,14 +688,32 @@ POST with query：投稿の検索を行う
 ```json
 {
     "message": "success to like a post",
-    "liked_user": {
+    "liked_post": {
         "id": 1,
-        "name": "test",
-        "icon": "https://example.com/icon.png"
-    }
+        "title": "test title",
+        "content": "test content",
+        "seat": "A-1",
+        "user": {
+            "id": 1,
+            "name": "test太郎",
+            "icon-url": "https://example.com/icon.png"
+        },
+        "images": [
+            {
+                "id": 1,
+                "url": "https://example.com/image.png"
+            },
+            {
+                "id": 2,
+                "url": "https://example.com/image2.png"
+            }, ...
+        ],
+        "num-sticky-notes": 10,
+        "num-likes": 10,
+    },
 }
 ```
-※👆liked_userは命名が微妙かも
+※👆liked_postは命名が微妙かも
 
 ## `/unlike/<post-id>`
 
@@ -488,14 +730,89 @@ POST with query：投稿の検索を行う
 ```json
 {
     "message": "success to unlike a post",
-    "unliked_user": {
+    "unliked-post": {
         "id": 1,
-        "name": "test",
-        "icon": "https://example.com/icon.png"
+        "title": "test title",
+        "content": "test content",
+        "seat": "A-1",
+        "user": {
+            "id": 1,
+            "name": "test太郎",
+            "icon-url": "https://example.com/icon.png"
+        },
+        "images": [
+            {
+                "id": 1,
+                "url": "https://example.com/image.png"
+            },
+            {
+                "id": 2,
+                "url": "https://example.com/image2.png"
+            }, ...
+        ],
+        "num-sticky-notes": 10,
+        "num-likes": 10,
+    },
     }
 }
 ```
-※👆liked_userは命名が微妙かも
+※👆unliked-postは命名が微妙かも
+
+## `/like/<sticky-note-id>`
+
+### 概要
+指定した付箋にいいねをつける
+
+### メソッド
+- POST
+
+### パラメータ
+- sticky-note-id：付箋ID
+
+### レスポンス
+```json
+{
+    "message": "success to like a sticky note",
+    "liked-sticky-note": {
+        "id": 1,
+        "content": "test content",
+        "color": "red",
+        "user": {
+            "id": 1,
+            "name": "test太郎",
+            "icon-url": "https://example.com/icon.png"
+        }
+    }
+}
+```
+
+## `/unlike/<sticky-note-id>`
+
+### 概要
+指定した付箋のいいねを解除する
+
+### メソッド
+- DELETE
+
+### パラメータ
+- sticky-note-id：付箋ID
+
+### レスポンス
+```json
+{
+    "message": "success to unlike a sticky note",
+    "unliked-sticky-note": {
+        "id": 1,
+        "content": "test content",
+        "color": "red",
+        "user": {
+            "id": 1,
+            "name": "test太郎",
+            "icon-url": "https://example.com/icon.png"
+        }
+    }
+}
+```
 
 
 ## `/follow/<user-id>`
@@ -513,10 +830,10 @@ POST with query：投稿の検索を行う
 ```json
 {
     "message": "success to follow a user",
-    "followed_user": {
+    "followed-user": {
         "id": 1,
-        "name": "test",
-        "icon": "https://example.com/icon.png"
+        "name": "test太郎",
+        "icon-url": "https://example.com/icon.png"
     }
 }
 ```
@@ -538,8 +855,8 @@ POST with query：投稿の検索を行う
     "message": "success to unfollow a user",
     "unfollowed_user": {
         "id": 1,
-        "name": "test",
-        "icon": "https://example.com/icon.png"
+        "name": "test太郎",
+        "icon-url": "https://example.com/icon.png"
     }
 }
 ```
