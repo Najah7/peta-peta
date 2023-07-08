@@ -15,7 +15,9 @@ class Post(models.Model):
     id = models.IntegerField(primary_key=True)
     user= models.ForeignKey(settings.AUTH_USER_MODEL, related_name='posts', on_delete=models.CASCADE)
     title=models.CharField(max_length=30)
-    content=models.CharField(max_length=100)
+    content=models.CharField(max_length=1024)
+    # URLのカンマ区切り👇
+    urls = models.TextField()
     
     def __str__(self) -> str:
         return self.title

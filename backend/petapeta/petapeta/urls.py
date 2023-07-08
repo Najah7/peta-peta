@@ -22,4 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('post/', include('post.urls')),
+    # NOTE: /auth/token/login/ と /auth/token/logout/ が追加される
+    path('auth/', include('djoser.urls.authtoken')),
 ]
