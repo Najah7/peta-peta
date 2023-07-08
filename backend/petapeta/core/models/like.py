@@ -34,4 +34,4 @@ class StickyNoteLike(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
-        return self.user.name + 'がつけた'  + self.sticky_note.post.title + 'につけた付箋' 
+        return self.user.name + 'が'  + self.sticky_note.post.title + 'につけた付箋' 
