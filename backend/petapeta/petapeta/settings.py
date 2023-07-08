@@ -42,8 +42,11 @@ INSTALLED_APPS = [
     'rest_framework',
     
     # My apps
-    'core',
     'api',
+    'auth',
+    'core',
+    'post',
+    'user',
     
 ]
 

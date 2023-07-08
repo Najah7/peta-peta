@@ -20,5 +20,6 @@ from django.conf.urls import include #includeのインポート
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')), # new
+    path('api/', include('api.urls')),
+    path('post/', include('post.urls')),
 ]
