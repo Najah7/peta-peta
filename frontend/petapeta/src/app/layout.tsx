@@ -1,14 +1,15 @@
 import { ReactNode } from 'react';
 import Header from './components/Header';
+import { Providers } from "./providers";
 
 type Props = { children: ReactNode };
 
 const Layout = ({ children }: Props) => {
   return (
-    <div>
+    <Providers>
       <Header />
-      <main>{children}</main>
-    </div>
+      {children}
+    </Providers>
   );
 };
 

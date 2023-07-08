@@ -1,7 +1,9 @@
+'use client'
 import * as React from 'react'
 import Link from 'next/link';
 import Image from 'next/image'
 import styles from './header.module.css'
+import { Input,Heading,Box } from '@chakra-ui/react'
 
 const Header = () => {
   return (
@@ -13,13 +15,21 @@ const Header = () => {
               width={80}
               height={80}
               priority
-      />
-      <h1>
-        PETAPETA
-      </h1>
+      />    
+      <Box m={2} p={2}></Box>
+     <Heading fontSize="7xl">
+        PETA
+      </Heading>
+      <Box m={1} p={1}></Box>
+      <Heading fontSize="7xl">
+        PETA
+      </Heading>
       </div>
-
+      
+     
       <div  className={styles.menu}>
+      <Input h="40px" w="300px" />
+      <Box m={2} p={2}></Box>
       <Link href="/">
       <Image
               src="/home2.svg"
@@ -29,10 +39,12 @@ const Header = () => {
               priority
       />
       </Link>
-      <h1>
-      ホーム
-      </h1>
 
+      <Box m={1} p={1}></Box>
+      <Heading fontSize="4xl">
+      ホーム
+      </Heading>
+      <Box m={2} p={2}></Box>
       <Link href="/">
       <Image
               src="/toukou2.svg"
@@ -42,9 +54,10 @@ const Header = () => {
               priority
       />
       </Link>
-      <h1>
+      <Box m={1} p={1}></Box>
+      <Heading fontSize="4xl">
       投稿
-      </h1>
+      </Heading>
 
       
 
