@@ -4,4 +4,15 @@ from core.models import CustomUser
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = '__all__'
+        exclude = (
+            'email',
+            'password',
+            'is_active',
+            'is_staff',
+            'is_superuser',
+            'updated_at',
+            'created_at',
+            'groups',
+            'user_permissions',
+            'last_login'
+        )
