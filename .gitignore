@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Django-related
+*.log
+db.sqlite3
+mygrations
+media/
+
+# Secret key
+*.secret
+
+# Development tools
+.vscode/
+.idea/
+
+# Environment variables
+.env
+
+# Compiled Python files
+*.pyc
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
