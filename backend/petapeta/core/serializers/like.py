@@ -16,6 +16,7 @@ class PostLikeSerializer(serializers.Serializer):
 class StickyNoteLikeSerializer(serializers.Serializer):
     class Meta:
         model = StickyNoteLike
+        unique_together = ('user', 'sticky_note')
     
     id = serializers.IntegerField(read_only=True)
     user = UserSerializer(read_only=True)
