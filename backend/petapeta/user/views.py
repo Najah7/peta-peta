@@ -19,24 +19,41 @@ class ShowProfile(views.APIView):
         if user is AnonymousUser:
             raise exceptions.AuthenticationFailed('認証されていません')
         
+        # データを取得
         posts = models.Post.objects.filter(user=user)
         sticky_notes = models.StickyNote.objects.filter(user=user)
+        followers = models.Follow.objects.filter(followee=user)
+        followings = models.Follow.objects.filter(follower=user)
         
+        # データの量を制限
+        if len(sticky_notes) > 30:
+            sticky_notes = sticky_notes[:30]
+        if len(followers) > 10:
+            followers[:10]
+        if len(followings) > 10:
+            followings[:10]
         
+        # シリアライズ
         serializer = serializers.UserSerializer(user)
         serialized_user = serializer.data
         serializer = serializers.PostSerializer(posts, many=True)
         serialized_posts = serializer.data
         serializer = serializers.StickyNoteSerializer(sticky_notes, many=True)
-        serializer_sticky_notes = serializer.data
+        serialized_sticky_notes = serializer.data
+        serializer = serializers.FollowSerializer(followers, many=True)
+        serialized_followers = serializer.data
+        serializer = serializers.FollowSerializer(followings, many=True)
+        serialized_followeings = serializer.data
         
-        response = {
+        # レスポンス
+        return Response({
             'user': serialized_user,
             'posts': serialized_posts,
-            'sticky_notes': serializer_sticky_notes
-        }
+            'sticky_notes': serialized_sticky_notes,
+            'followers': serialized_followers,
+            'followings': serialized_followeings,
+        }, status=status.HTTP_200_OK)
         
-        return Response(response, status=status.HTTP_200_OK)
 
 
 class CreateUser(views.APIView):
