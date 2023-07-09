@@ -1,20 +1,17 @@
-.logo{
-    width: 400px;
-    height: 100px;
-    display:flex;
-    float: left;
+.logo {
+  display: flex;
+  align-items: center;
 }
 
-.menu{
-    width: 700px;
-    height: 100px;
-    display:flex;
-    float: right;
-    margin: 15px;
+.menu {
+  width: 700px;
+  height: 100px;
+  display: flex;
+  margin: 15px;
 }
 
-.header{
-    width: 100%;
-    height: 100px;
-    display:flex;
+.header {
+  width: 100%;
+  height: 100px;
+  display: flex;
 }
