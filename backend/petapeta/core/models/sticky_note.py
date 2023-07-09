@@ -13,7 +13,6 @@ class StickyNote(models.Model):
     class Meta:
         db_table = 'sticky_notes'
     
-    id = models.IntegerField(primary_key=True)
     user= models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sticky_notes', on_delete=models.CASCADE)
     post= models.ForeignKey(Post, related_name='sticky_notes', on_delete=models.CASCADE)
     
