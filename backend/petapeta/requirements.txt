@@ -1,0 +1,12 @@
+Django
+graphene-django
+django-filter
+django-cors-headers
+psycopg2
+factory-boy
+pytz
+django-environ
+gunicorn
+djangorestframework
+Pillow
+djoser

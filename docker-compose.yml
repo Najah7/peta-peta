@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  petapeta:
+    build:
+      context: .
+      dockerfile: "./backend/petapeta/Dockerfile"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/petapeta:/petapeta
+    command: sh -c "python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
+    environment:
+      - FRONT_URI=http://localhost:3000
+      - ALLOWED_HOST=localhost
+      - DB_HOST=db
+      - DB_NAME=petapeta
+      - DB_USER=petaAdmin
+      - DB_PASS=supersecretpassword
+    depends_on:
+      - db
+
+  db:
+    image: postgres:13.11-bullseye
+    environment:
+      - POSTGRES_DB=petapeta
+      - POSTGRES_USER=petaAdmin
+      - POSTGRES_PASSWORD=supersecretpassword
+      - POSTGRES_HOST_AUTH_METHOD=trust
+
+  next:
+    build:
+      context: .
+      dockerfile: "./frontend/Dockerfile"
+    volumes:
+      - ./frontend:/frontend
+    command: sh -c "npm run dev"
+    ports:
+      - "3000:3000"

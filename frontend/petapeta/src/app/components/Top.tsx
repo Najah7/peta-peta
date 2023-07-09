@@ -1,6 +1,15 @@
 "use client";
+import PostCard from "./PostCard";
+
 function Top() {
-  return <div>Eチーズ</div>;
+  return (
+    <>
+      <PostCard />
+      <PostCard />
+      <PostCard />
+      <PostCard />
+    </>
+  );
 }
 
 export default Top;

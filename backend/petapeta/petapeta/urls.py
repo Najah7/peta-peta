@@ -20,5 +20,11 @@ from django.conf.urls import include #includeのインポート
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')), # new
+    path('api/', include('api.urls')),
+    path('post/', include('post.urls')),
+    path('users/', include('user.urls')),
+    path('me/', include('user.urls')),
+    # NOTE: /auth/token/login/ と /auth/token/logout/ が追加される
+    path('auth/', include('djoser.urls.authtoken')),
+
 ]

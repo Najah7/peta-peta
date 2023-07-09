@@ -24,11 +24,14 @@
 
 ## エンドポイント一覧
 - [`/healthcheck`](#healthcheck)
-- [`/token`](#token)
-- [`/token/refresh`](#tokenrefresh)
-- [`/change-passwd`](#change-passwd)
+- [`/auth/token/login`](#token)
+- [`/auth/token/logout`](#tokenlogout)`
+
 - [`/me`](#me)
-- [`/users`](#users)
+- [`/user/list`](#users)
+- [`user/follow/<user-id>`](#followuser-id)
+- [`user/unfollow/<user-id>`](#unfollowuser-id)
+
 - [`/share-your-views`](#share-your-views)
 - [`/upload-image`](#upload-image)
 - [`/posts`](#posts)
@@ -38,8 +41,7 @@
 - [`/unlike/<post-id>`](#unlikepost-id)
 - [`/like/<sticky-note-id>`](#likesticky-note-id)
 - [`/unlike/<sticky-note-id>`](#unlikesticky-note-id)
-- [`/follow/<user-id>`](#followuser-id)
-- [`/unfollow/<user-id>`](#unfollowuser-id)
+
 
 ## エンドポイント詳細
 
