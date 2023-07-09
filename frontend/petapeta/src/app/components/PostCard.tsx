@@ -1,5 +1,5 @@
 "use client";
-import { Box, Center, Flex, Spacer } from "@chakra-ui/react";
+import { Box, Center, Flex, Spacer,Text } from "@chakra-ui/react";
 import Stickeys from "./Stickeys";
 
 type StickeysProps = {
@@ -18,7 +18,7 @@ type PostCardProps = {
 function PostCard(props: PostCardProps) {
   return (
     <>
-      <Box m="30px">stickey notes:{props.note}</Box>
+      <Box m="30px"><Text fontSize='3xl'>stickey notes:{props.note}</Text></Box>
       <Center>
         <Box w="50vw">
           <Flex alignItems="center">

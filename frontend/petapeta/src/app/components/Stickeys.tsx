@@ -1,5 +1,6 @@
 "use client";
 import { Box } from "@chakra-ui/react";
+
 type StickeysProps = {
   top: number;
   left: number;
@@ -18,8 +19,16 @@ function Stickeys(props: StickeysProps) {
         p="10px"
         borderRadius="20px"
         opacity="0.8"
-      >
+      ><div style={{
+        text-stroke
+        position: "absolute",
+        width: "100vw",
+        height: "100%",
+        opacity: 0,
+        
+      }}>
         {props.comment}
+        </div>
       </Box>
     </>
   );
