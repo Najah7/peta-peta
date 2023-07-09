@@ -44,8 +44,11 @@ INSTALLED_APPS = [
     'djoser',
     
     # My apps
-    'core',
     'api',
+    'core',
+    'post',
+    'user',
+    'utils'
     
 ]
 
