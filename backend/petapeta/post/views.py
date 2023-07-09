@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AnonymousUser
+from django.db import IntegrityError
 
 from rest_framework import views
 
@@ -94,71 +95,100 @@ class UnPostIt(views.APIView):
 
         return Response(status=204)
         
-# class LikePost(views.APIView):
+class LikePost(views.APIView):
     
-#     def post(self, request, post_id,  *args, **kwargs):
+    def post(self, request, id,  *args, **kwargs):
         
-#         try:
-#             post = models.Post.objects.get(id=post_id)
-#         except models.Post.DoesNotExist:
-#             exceptions.NotFound("Post が見つかりませんでした。")
+        user = request.user
+        if user is AnonymousUser:
+            exceptions.AuthenticationFailed("ログインしてください。")
         
-#         like = models.Like(user=request.user, post=post)
+        try:
+            post = models.Post.objects.get(id=id)
+        except models.Post.DoesNotExist:
+            exceptions.NotFound("Post が見つかりませんでした。")
         
-#         try:
-#             like.save()
-#         except Exception as e:
-#             exceptions.APIException("Like データの保存中にエラーが発生しました:", str(e))
+        like = models.PostLike(user=user, post=post)
         
-#         serializer = serializers.LikeSerializer(like)
-#         serialized_like = serializer.data
+        try:
+            like.save()
+        except IntegrityError as e:
+            raise exceptions.APIException("すでにLikeしています。" + "Detail: " + str(e), status.HTTP_400_BAD_REQUEST)
         
-#         return Response(serialized_like)
+        serializer = serializers.PostLikeSerializer(like)
+        serialized_like = serializer.data
+        
+        serialized_like['post']['urls'] = serialized_like['post']['urls'].split(',')
+        
+        return Response(serialized_like)
 
-# class UnlikePost(views.APIView):
+class UnlikePost(views.APIView):
     
-#     def delete(self, request, *args, **kwargs):
-#         post_id = request.query_params.get('post_id')
+    def delete(self, request, id,  *args, **kwargs):
+        user = request.user
+        if user is AnonymousUser:
+            exceptions.AuthenticationFailed("ログインしてください。")
         
-#         like = models.Like.objects.where(post_id=post_id).where(user=request.user).first()
+        post = models.Post.objects.get(id=id)
         
-#         try:
-#             like.delete()
-#         except Exception as e:
-#             print("Like データの削除中にエラーが発生しました:", str(e))
+        try:
+            like = models.PostLike.objects.filter(post=post, user=user).first()
+        except models.PostLike.DoesNotExist:
+            raise exceptions.NotFound("Like が見つかりませんでした。")
+        
+        try:
+            like.delete()
+        except Exception as e:
+            print("Like データの削除中にエラーが発生しました:", str(e))
 
-#         return Response(status=204)
+        return Response(status=204)
 
-# class LikeStickyNote(views.APIView):
+class LikeStickyNote(views.APIView):
     
-#     def post(self, request, *args, **kwargs):
-#         sticky_note_id = request.query_params.get('sticky_note_id')
+    def post(self, request, id, *args, **kwargs):
         
-#         sticy_note = models.StickyNote.objects.get(id=sticky_note_id)
+        user = request.user
+        if user is AnonymousUser:
+            raise exceptions.AuthenticationFailed("ログインしてください。")
         
-#         like = models.Like(user=request.user, sticy_note=sticy_note)
+        try:
+            sticky_note = models.StickyNote.objects.get(id=id)
+        except models.StickyNote.DoesNotExist:
+            raise exceptions.NotFound("Sticky Note が見つかりませんでした。")
         
-#         try:
-#             like.save()
-#         except Exception as e:
-#             print("Like データの保存中にエラーが発生しました:", str(e))
+        like = models.StickyNoteLike(user=user, sticky_note=sticky_note)
         
-#         serializer = serializers.LikeSerializer(like)
-#         serialized_like = serializer.data
+        try:
+            like.save()
+        except IntegrityError as e:
+            raise exceptions.APIException("すでにLikeしています。" + "Detail: " + str(e), status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            raise exceptions.APIException("Like データの保存中にエラーが発生しました:", str(e))
         
-#         return Response(serialized_like)
+        serializer = serializers.StickyNoteLikeSerializer(like)
+        serialized_like = serializer.data
+        
+        return Response(serialized_like)
 
-# class UnlikeStickyNote(views.APIView):
+class UnlikeStickyNote(views.APIView):
     
-#     def delete(self, request, *args, **kwargs):
-#         sticky_note_id = request.query_params.get('sticky_note_id')
+    def delete(self, request, id, *args, **kwargs):
+        user = request.user
+        if user is AnonymousUser:
+            raise exceptions.AuthenticationFailed("ログインしてください。")
         
-#         like = models.Like.objects.where(sticky_note_id=sticky_note_id).where(user=request.user).first()
-        
-#         try:
-#             like.delete()
-#         except Exception as e:
-#             print("Like データの削除中にエラーが発生しました:", str(e))
+        try:
+            like = models.StickyNoteLike.objects.filter(id=id, user=user).get()
+        except models.StickyNoteLike.DoesNotExist:
+            raise exceptions.NotFound("Like が見つかりませんでした。")
 
-#         return Response(status=204)
+        # if like is None:
+        #     exceptions.NotFound("Like が見つかりませんでした。")
+        
+        try:
+            like.delete()
+        except Exception as e:
+            raise exceptions.APIException("Like データの削除中にエラーが発生しました" + "Detail:" + str(e))
+
+        return Response(status=204)
     
