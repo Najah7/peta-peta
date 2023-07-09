@@ -1,9 +1,24 @@
 "use client";
 import { Box, Center, Flex, Spacer } from "@chakra-ui/react";
-function PostCard() {
+import Stickeys from "./Stickeys";
+
+type StickeysProps = {
+  top: number;
+  left: number;
+  comment: string;
+};
+
+type PostCardProps = {
+  username: string;
+  comment: string;
+  imgPath: string;
+  note: number;
+  post: StickeysProps[];
+};
+function PostCard(props: PostCardProps) {
   return (
     <>
-      <Box m="30px">stickey notes:15</Box>
+      <Box m="30px">stickey notes:{props.note}</Box>
       <Center>
         <Box w="50vw">
           <Flex alignItems="center">
@@ -11,29 +26,21 @@ function PostCard() {
               style={{ width: "60px", height: "60px", borderRadius: "50%" }}
               src="/OIP.jpg"
             ></img>
-            <div>ユーザ名</div>
+            <div>{props.username}</div>
             <Spacer />
-            <div>コメント:テスト用の画像です</div>
+            <div>コメント:{props.comment}</div>
             <></>
           </Flex>
           <Center>
-            <img width="100%" src="/tmp.jpg"></img>
+            <img width="100%" src={props.imgPath}></img>
           </Center>
         </Box>
       </Center>
-      <Box
-        w="100px"
-        h="100px"
-        bg="#ec7b26"
-        position="relative"
-        top="-400"
-        left="500"
-        p="10px"
-        borderRadius="20px"
-        opacity="0.8"
-      >
-        dsafafsafa
-      </Box>
+      {props.post.map((post) => {
+        return (
+          <Stickeys top={post.top} left={post.left} comment={post.comment} />
+        );
+      })}
     </>
   );
 }
