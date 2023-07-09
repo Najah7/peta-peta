@@ -11,5 +11,5 @@ class PostSerializer(serializers.Serializer):
     user = UserSerializer(read_only=True)
     title = serializers.CharField(max_length=30)
     content = serializers.CharField(max_length=1024)
-    url = serializers.CharField()
+    urls = serializers.CharField()
         
