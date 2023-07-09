@@ -16,8 +16,8 @@ class PostLike(models.Model):
         unique_together = ('user', 'post')
     
     id = models.IntegerField(primary_key=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='likes', on_delete=models.CASCADE)
-    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='post_likes', on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='post_likes', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
@@ -28,9 +28,8 @@ class StickyNoteLike(models.Model):
         db_table = 'sticky_note_likes'
         unique_together = ('user', 'sticky_note')
     
-    id = models.IntegerField(primary_key=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='likes', on_delete=models.CASCADE)
-    sticky_note = models.ForeignKey(StickyNote, related_name='likes', on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='sticky_note_likes', on_delete=models.CASCADE)
+    sticky_note = models.ForeignKey(StickyNote, related_name='sticky_note_likes', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:

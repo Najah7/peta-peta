@@ -12,7 +12,6 @@ class Phote(models.Model):
     class Meta:
         db_table = 'photes'
     
-    id = models.IntegerField(primary_key=True)
     post = models.ForeignKey(Post, related_name='photes', on_delete=models.CASCADE)
     # 後々S３に移行。
     image = models.ImageField(upload_to='images/')

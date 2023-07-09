@@ -12,7 +12,6 @@ class Post(models.Model):
     class Meta:
         db_table = 'posts'
     
-    id = models.IntegerField(primary_key=True)
     user= models.ForeignKey(settings.AUTH_USER_MODEL, related_name='posts', on_delete=models.CASCADE)
     title=models.CharField(max_length=30)
     content=models.CharField(max_length=1024)
