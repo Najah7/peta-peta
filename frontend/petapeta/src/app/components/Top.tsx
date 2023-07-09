@@ -52,7 +52,7 @@ function Top() {
           paddingBottom: "60px",
         }}
       >
-        <textarea onChange={} name="comment" placeholder="コメント"></textarea>
+        <textarea name="comment" placeholder="コメント"></textarea>
         <div>
           <button onSubmit={saveComment}>投稿!!</button>
         </div>
