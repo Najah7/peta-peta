@@ -25,6 +25,8 @@ urlpatterns = [
     path('users/', include('user.urls')),
     path('follow/', include('follow.urls')),
     path('unfollow/', include('unfollow.urls')),
+    path('share-your-views/', include('post.urls')),
+    path('posts/', include('post.urls')),
     path('like/', include('like.urls')),
     path('unlike/', include('unlike.urls')),
     path('post-it/', include('post_it.urls')),
