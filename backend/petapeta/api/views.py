@@ -1,14 +1,10 @@
-from django.shortcuts import render
-from django.http import HttpResponse
-import json 
-from rest_framework import viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
 
-
-
+@api_view(['GET'])
 def healthcheck(request):
     params ={
         "message": "Server is working"
     }
-    #json形式の文字列を生成
-    json_str = json.dumps(params)
-    return HttpResponse(json_str)
+    return Response(params)
+    
