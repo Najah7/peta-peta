@@ -7,7 +7,7 @@ Phote Model
 from django.db import models
 from core.models import Post
 
-class Phote(models.Model):
+class Photo(models.Model):
     
     class Meta:
         db_table = 'photes'
