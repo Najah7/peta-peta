@@ -19,14 +19,24 @@ from django.urls import path
 from django.conf.urls import include #includeのインポート
 
 urlpatterns = [
+    # 管理者や開発者用
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-    path('post/', include('post.urls')),
+    
+    # 認証関係
+    path('', include('djoser.urls.authtoken')),
+    
+    # ユーザー
+    path('me/', include('user.urls')),
     path('users/', include('user.urls')),
     path('follow/', include('follow.urls')),
     path('unfollow/', include('unfollow.urls')),
+    
+    # 投稿
     path('share-your-views/', include('post.urls')),
     path('posts/', include('post.urls')),
+    
+    # その他の機能
     path('like/', include('like.urls')),
     path('unlike/', include('unlike.urls')),
     path('post-it/', include('post_it.urls')),
