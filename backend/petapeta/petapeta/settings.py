@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     # My apps
     'api',
     'core',
+    'user',
     'post',
     'post_it',
     'unpost_it',
