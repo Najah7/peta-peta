@@ -35,6 +35,7 @@ urlpatterns = [
     # 投稿
     path('share-your-views/', include('post.urls')),
     path('posts/', include('post.urls')),
+    path('upload/', include('upload.urls')),
     
     # その他の機能
     path('like/', include('like.urls')),
