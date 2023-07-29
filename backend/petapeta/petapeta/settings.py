@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'api',
     'core',
     'post',
+    'post_it',
     'like',
     'unlike',
     'follow',
