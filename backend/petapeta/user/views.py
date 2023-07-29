@@ -100,55 +100,5 @@ class UserList(views.APIView):
         
         return Response(serialized_user, status=status.HTTP_200_OK)
     
-class FollowUser(views.APIView):
-    
-    def post(self, request, user_id, format=None):
-        user = request.user
-        
-        if user is AnonymousUser:
-            raise exceptions.AuthenticationFailed('認証されていません')
-        
-        follower = models.CustomUser.objects.get(id=user_id)
-        follow = models.Follow(followee=user, follower=follower)
-        
-        try:
-            follow.save()
-        except IntegrityError as e:
-            response = {
-                'message': 'すでにフォローしています。',
-                'error': str(e)
-            }
-            return Response(response, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer = serializers.FollowSerializer(follow)
-        serialized_follow = serializer.data
-        
-        response = {
-            "message": "フォローしました。",
-            "follow_info": serialized_follow
-            }
-        
-        return Response(response, status=status.HTTP_200_OK)
-
-class UnFollowUser(views.APIView):
-    
-    def post(self, request, user_id, format=None):
-        user = request.user
-        
-        if user is AnonymousUser:
-            raise exceptions.AuthenticationFailed('認証されていません')
-        
-        try:
-            follow = models.Follow.objects.get(followee=user, follower=user_id)
-        except models.Follow.DoesNotExist:
-            raise exceptions.NotFound('フォローしていません')
-
-        try:
-            follow.delete()
-            return Response(status=status.HTTP_200_OK)
-        except Exception as e:
-            print("削除中に異常が発生しました。" + 'detaile: ' + e)
-        
-        return Response(status=status.HTTP_204_NO_CONTENT)
         
     

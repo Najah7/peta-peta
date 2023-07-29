@@ -23,8 +23,5 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('post/', include('post.urls')),
     path('users/', include('user.urls')),
-    path('me/', include('user.urls')),
-    # NOTE: /auth/token/login/ と /auth/token/logout/ が追加される
-    path('auth/', include('djoser.urls.authtoken')),
-
+    path('follow/', include('follow.urls')),
 ]
