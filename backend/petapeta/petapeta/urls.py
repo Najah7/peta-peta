@@ -28,4 +28,5 @@ urlpatterns = [
     path('like/', include('like.urls')),
     path('unlike/', include('unlike.urls')),
     path('post-it/', include('post_it.urls')),
+    path('unpost-it/', include('unpost_it.urls')),
 ]
