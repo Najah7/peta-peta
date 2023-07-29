@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'core',
     'post',
     'like',
+    'unlike',
     'follow',
 ]
 

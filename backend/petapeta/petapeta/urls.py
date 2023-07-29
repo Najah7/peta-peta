@@ -26,4 +26,5 @@ urlpatterns = [
     path('follow/', include('follow.urls')),
     path('unfollow/', include('unfollow.urls')),
     path('like/', include('like.urls')),
+    path('unlike/', include('unlike.urls')),
 ]
