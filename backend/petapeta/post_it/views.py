@@ -1,12 +1,14 @@
 from django.contrib.auth.models import AnonymousUser
 
 from rest_framework import views
+from rest_framework.response import Response
+from rest_framework import exceptions
+from rest_framework import status
 
 from core import models
 from core import serializers
 
-from rest_framework.response import Response
-from rest_framework import exceptions
+
 
 
 class PostIt(views.APIView):
@@ -30,7 +32,7 @@ class PostIt(views.APIView):
         serializer = serializers.StickyNoteSerializer(sticky_note)
         serialized_sticky_note = serializer.data
         
-        return Response(serialized_sticky_note)
+        return Response(serialized_sticky_note, status=status.HTTP_201_CREATED)
     
 
         

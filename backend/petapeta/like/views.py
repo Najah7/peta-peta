@@ -37,7 +37,7 @@ class LikePost(views.APIView):
         
         serialized_like['post']['urls'] = serialized_like['post']['urls'].split(',')
         
-        return Response(serialized_like)
+        return Response(serialized_like, status.HTTP_201_CREATED)
 
 
 
@@ -66,5 +66,5 @@ class LikeStickyNote(views.APIView):
         serializer = serializers.StickyNoteLikeSerializer(like)
         serialized_like = serializer.data
         
-        return Response(serialized_like)
+        return Response(serialized_like, status.HTTP_201_CREATED)
 
