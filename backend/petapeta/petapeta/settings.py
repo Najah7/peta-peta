@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'like',
     'unlike',
     'follow',
+    'unfollow'
 ]
 
 MIDDLEWARE = [
