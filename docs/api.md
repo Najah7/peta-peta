@@ -23,18 +23,27 @@
 
 
 ## エンドポイント一覧
-- [`/healthcheck`](#healthcheck)
-- [`/auth/token/login`](#token)
-- [`/auth/token/logout`](#tokenlogout)`
 
+### 管理者 and 開発者用
+- [`/admin`](#admin)
+- [`/health`](#health)
+
+### 認証系
+- [`/token/login`](#tokenlogin)
+- [`/token/logout`](#tokenlogout)
+
+### ユーザー系
 - [`/me`](#me)
 - [`/user/list`](#users)
 - [`user/follow/<user-id>`](#followuser-id)
 - [`user/unfollow/<user-id>`](#unfollowuser-id)
 
+## 投稿系
 - [`/share-your-views`](#share-your-views)
-- [`/upload-image`](#upload-image)
-- [`/posts`](#posts)
+- [`/upload/image`](#upload/image)
+- [`/posts/list`](#postslist)
+
+## Likeやコメント系
 - [`/post-it/<post-id>`](#post-itpost-id)
 - [`/unpost-it/<sticky-note-id>`](#unpost-itsticky-note-id)
 - [`/like/<post-id>`](#likepost-id)
@@ -45,7 +54,14 @@
 
 ## エンドポイント詳細
 
-### `/healthcheck`
+### `/admin`
+
+#### 概要
+Adminページ。
+現在は、Djangoのデフォルトのもの。
+個々はREST APIでなく、Webページである。
+
+### `/health`
 
 #### 概要
 ヘルスチェック用
@@ -65,10 +81,10 @@
 ```
 
 
-## `/token`
+## `/token/login`
 
 ### 概要
-認証用のトークンを取得する
+トークンを取得する
 
 ### メソッド
 - POST
@@ -78,30 +94,29 @@
 - password
 
 ### レスポンス
-- 200 OK
 ```json
 {
-  "token": "xxx"
+  "auth_token": "xxx"
 }
 ```
 
-## `/token/refresh`
+## `/token/logout`
 
 ### 概要
-トークンを更新する
+ログアウトする
 
 ### メソッド
 - POST
 
 ### パラメータ
-- token
+なし
+
+### 注意点
+ヘッダーにトークンを入れる
+Authorization: Token xxx
 
 ### レスポンス
-```json
-{
-  "token": "xxx"
-}
-```
+just return 204 No Content
 
 
 ## `/me`
@@ -354,7 +369,7 @@
 }
 ```
 
-## `/upload-image`
+## `/upload/image`
 
 ### 概要
 画像をアップロードする
@@ -377,7 +392,7 @@
 }
 ```
 
-## `/posts`
+## `/posts/list`
 
 ### 概要
 GET：投稿の一覧を取得する
