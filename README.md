@@ -8,5 +8,3 @@ KDDI主催のハッカソン（7月8日＆9日）で企画し開発したプロ�
 
  [プロダクトについての詳しい説明](https://github.com/KDDIhacks/KDDIHacks2023-TeamE/blob/develop/docs/RS.md)
 
- ## 完成予定
- 8月中に完成予定。
